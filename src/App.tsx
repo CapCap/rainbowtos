@@ -182,11 +182,13 @@ function ditherize(ctx: CanvasRenderingContext2D) {
   newCanvas.height = height;
   newCanvas.width = width;
   const newCtx = newCanvas.getContext("2d")!;
+  newCtx.clearRect(0, 0, newCanvas.width, newCanvas.height);
 
   const q = new RgbQuant(rgbQuantOptions);
   // Analyze histograms to get colors
   q.sample(ctx.canvas);
-  const ditherResult = q.reduce(ctx);
+  const ditherResult = q.reduce(ctx, 2);
+  debugger;
   // Get the newly dithered image data
   const imgData = newCtx.getImageData(0, 0, width, height);
   console.log(newCtx.canvas.width, newCtx.canvas.height, imgData.width, imgData.height, ctx.canvas.width,
@@ -205,7 +207,7 @@ async function renderAndDither(imageString: string, id: string, width: number, h
     const outputImg = document.getElementById(id) as HTMLImageElement;
     const canvas = imgToCanvas(img);
     outputImg.src = ditherize(canvas.getContext("2d")!).toDataURL("image/png");
-    //outputImg.src = imgData;//canvas.toDataURL("image/png");
+    //outputImg.src = canvas.toDataURL("image/png");
     outputImg.width = width;
     outputImg.height = height;
   };
